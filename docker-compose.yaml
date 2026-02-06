@@ -1,0 +1,41 @@
+services:
+  test: &base
+    build: .
+    image: popmenu-test
+    command: bundle exec rspec -fd .
+    platform: linux/amd64
+    volumes:
+      - .:/popmenu
+      - gem_home:/vendor/cache:delegated
+    environment:
+      - RACK_ENV=test
+    stdin_open: true
+    tty: true
+
+  web:
+    <<: *base
+    build: .
+    command: "bundle exec puma -C config/puma.rb"
+    container_name: popmenu
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    ports:
+      - 3000:3000
+    depends_on:
+      - redis
+    environment:
+      - RACK_ENV=development
+      - REDIS_URL=redis://redis:6379
+   
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    container_name: popmenu-redis
+    ports:
+      - 6379:6379
+
+volumes:
+  gem_home:
