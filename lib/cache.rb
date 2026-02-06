@@ -78,7 +78,10 @@ class Cache
       if conn.exists?(key)
         Oj.load(conn.get(key), mode: :object)
       else
-        yield.tap { |data| conn.set(key, Oj.dump(data, mode: :object), ex: ttl) }
+        data = yield
+        return data if data.nil?
+        
+        data.tap { |data| conn.set(key, Oj.dump(data, mode: :object), ex: ttl) }
       end
     end
   end
