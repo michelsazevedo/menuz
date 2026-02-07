@@ -10,8 +10,10 @@ class ApplicationController < Sinatra::Base
     set :logger, Sinatra.logger
   end
 
+  helpers ApiResponse
+
   helpers do
-    def request_params
+    def req_params
       body = Oj.load(request.body.read)
       body.transform_keys!(&:to_sym)
     rescue Oj::ParseError

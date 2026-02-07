@@ -3,6 +3,9 @@
 # Restaurant Model
 class Restaurant < Sequel::Model
   include ApplicationModel
+  include Searchable
+
+  searchable :name
 
   def validate
     super

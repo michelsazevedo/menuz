@@ -19,6 +19,8 @@ class SequelDb
       mutex.synchronize do
         @conn ||= Sequel.connect(connection_string, max_connections: ENV.fetch('SEQUEL_POOL', 5)).tap do |db|
           db.run('PRAGMA journal_mode=WAL;')
+          db.extension :pagination
+
           at_exit do
             db.disconnect
           end
@@ -27,7 +29,7 @@ class SequelDb
     end
 
     def connection_string
-      'sqlite://db/popmenu.sqlite3'
+      'sqlite://db/menuz.sqlite3'
     end
 
     def mutex

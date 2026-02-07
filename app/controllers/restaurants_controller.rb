@@ -3,28 +3,27 @@
 # Restaurants
 class RestaurantsController < ApplicationController
   get '/' do
-    restaurants = Restaurant.all
-    render json: { data: restaurants, error: nil }, status: 200
+    render json: as_json_collection(Restaurant.search(**search_params)), status: 200
   end
 
   get '/:id' do
     restaurant = Restaurant[params[:id]]
 
     if restaurant
-      render json: { data: restaurant, error: nil }, status: 200
+      render json: as_json(restaurant), status: 200
     else
-      render json: { data: nil, error: [:not_found] }, status: 404
+      render json: as_json(nil, errors: ["not found"]), status: 404
     end
   end
 
   post '/' do
     CreateRestaurant.call(restaurant_params) do |service|
       service.success do |restaurant|
-        render json: { data: restaurant, error: nil }, status: 201
+        render json: as_json(restaurant), status: 201
       end
 
       service.failure do |errors|
-        render json: { data: nil, errors: errors }, status: 422
+        render json: as_json(nil, errors: errors), status: 422
       end
     end
   end
@@ -33,6 +32,12 @@ class RestaurantsController < ApplicationController
 
   # @return [Hash]
   def restaurant_params
-    request_params.slice(:name, :location)
+    req_params.slice(:name, :location)
+  end
+
+  # @return [Hash]
+  def search_params
+    q, page, per_page = params.values_at(:q, :page, :per_page)
+    {q:, page:, per_page:}.compact
   end
 end

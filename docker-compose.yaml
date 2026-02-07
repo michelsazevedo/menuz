@@ -1,11 +1,11 @@
 services:
   test: &base
     build: .
-    image: popmenu-test
+    image: menuz-test
     command: bundle exec rspec -fd .
     platform: linux/amd64
     volumes:
-      - .:/popmenu
+      - .:/menuz
       - gem_home:/vendor/cache:delegated
     environment:
       - RACK_ENV=test
@@ -16,7 +16,7 @@ services:
     <<: *base
     build: .
     command: "bundle exec puma -C config/puma.rb"
-    container_name: popmenu
+    container_name: menuz
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/healthz"]
       interval: 30s
@@ -33,7 +33,7 @@ services:
   redis:
     image: redis:alpine
     restart: unless-stopped
-    container_name: popmenu-redis
+    container_name: menuz-redis
     ports:
       - 6379:6379
 

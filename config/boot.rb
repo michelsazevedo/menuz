@@ -23,7 +23,7 @@ Sinatra::Base.settings.root = File.join(File.dirname(__FILE__), '..', 'app')
 # Set autoloading directories
 loader = Zeitwerk::Loader.new
 
-Dir.glob(File.join(Sinatra::Base.settings.root, '**', '*')).each do |path|
+Dir.glob(File.join(Sinatra::Base.settings.root, '**/*')).each do |path|
   loader.push_dir path if File.directory?(path)
 end
 

@@ -18,6 +18,6 @@ module Sinatra
   end
 end
 
-Sinatra.logger = Logz.new(ENV.fetch('APP_NAME', 'Popmenu'), ENV.fetch('LOG_LEVEL', :info))
+Sinatra.logger = Logz.new(ENV.fetch('APP_NAME', 'Menuz'), ENV.fetch('LOG_LEVEL', :info))
 Sinatra.cache = Cache.configure(logger: Sinatra.logger) unless Sinatra.test_env?
 

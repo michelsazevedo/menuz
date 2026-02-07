@@ -11,7 +11,7 @@ ENV LD_PRELOAD=/usr/lib/libjemalloc.so.2
 
 RUN bundle config build.nokogiri --use-system-libraries
 
-ENV APP_HOME=/popmenu/
+ENV APP_HOME=/menuz/
 RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 

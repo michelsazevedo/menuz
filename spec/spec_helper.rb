@@ -33,6 +33,7 @@ RSpec.configure do |config|
 
   config.after(:each) do
     SequelDb.sequel_instance_exec do |db|
+      db[:restaurants].truncate
     end
   end
 end
