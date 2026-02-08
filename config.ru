@@ -5,5 +5,6 @@ require_relative './config/boot'
 
 run Rack::URLMap.new(
   '/healthz' => HealthzController,
-  '/restaurants' => RestaurantsController
+  '/restaurants' => RestaurantsController,
+  '/menus' => MenusController,
 )

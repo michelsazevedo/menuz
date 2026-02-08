@@ -37,6 +37,25 @@ RSpec.describe RestaurantsController, type: :controller do
     end
   end
 
+  describe 'GET /:id/menus' do
+    it 'returns menus for a restaurant' do
+      restaurant = create(:restaurant).save
+      create(:menu, restaurant_id: restaurant.id).save
+
+      get "/#{restaurant.id}/menus"
+      body = Oj.load(last_response.body)
+
+      expect(last_response.status).to be_eql(200)
+      expect(body['data'].length).to be_eql(1)
+    end
+
+    it 'returns 404 when restaurant not found' do
+      get '/42/menus'
+
+      expect(last_response.status).to be_eql(404)
+    end
+  end
+
   describe 'POST /' do
     context 'with valid restaurant' do
       let(:record) { create(:restaurant) }

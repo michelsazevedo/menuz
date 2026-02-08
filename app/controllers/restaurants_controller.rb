@@ -16,6 +16,16 @@ class RestaurantsController < ApplicationController
     end
   end
 
+  get '/:id/menus' do
+    restaurant = Restaurant[params[:id]]
+
+    if restaurant
+      render json: as_json(restaurant.menus.map(&:values)), status: 200
+    else
+      render json: as_json(nil, errors: ['not found']), status: 404
+    end
+  end
+
   post '/' do
     CreateRestaurant.call(restaurant_params) do |service|
       service.success do |restaurant|

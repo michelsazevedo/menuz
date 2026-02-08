@@ -5,6 +5,8 @@ class Restaurant < Sequel::Model
   include ApplicationModel
   include Searchable
 
+  one_to_many :menus
+
   searchable :name
 
   def validate
