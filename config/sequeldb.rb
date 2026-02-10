@@ -15,20 +15,12 @@ class SequelDb
     # @param logger [Logger] logger instance
     #
     # @return [SequelDb]
-    def configure(
-      database_url: ENV['DATABASE_URL'],
-      pool_size: ENV.fetch('SEQUEL_POOL', 5),
-      logger: nil
-    )
+    def configure(database_url: ENV['DATABASE_URL'], pool_size: ENV.fetch('SEQUEL_POOL', 5), logger: nil)
       @database_url = database_url || 'sqlite://db/menuz.sqlite3'
       @pool_size    = pool_size
       @logger       = logger || Logger.new($stdout)
 
-      @instance = new(
-        database_url: @database_url,
-        pool_size: @pool_size,
-        logger: @logger
-      )
+      @instance = new(database_url: @database_url, pool_size: @pool_size, logger: @logger)
     end
   end
 
@@ -40,7 +32,6 @@ class SequelDb
       db.extension :pagination
     end
 
-    setup_extensions
     graceful_shutdown
   end
 
@@ -60,14 +51,6 @@ class SequelDb
   private
 
   attr_reader :logger
-
-  def setup_extensions
-    db.extension :pagination
-
-    if db.database_type == :sqlite
-      db.run('PRAGMA journal_mode=WAL;')
-    end
-  end
 
   def graceful_shutdown
     at_exit do
