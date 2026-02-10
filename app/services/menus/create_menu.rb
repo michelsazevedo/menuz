@@ -7,7 +7,10 @@ class CreateMenu
   attributes :name, :description, :restaurant_id
 
   def call
-    menu = Menu.new(name:, description:, restaurant_id:)
+    menu = Menu.first(name:, restaurant_id:)
+    return Success(menu.values) if menu
+
+    menu = Menu.new({ name:, description:, restaurant_id:, }.compact)
 
     if menu.valid?
       menu.save!

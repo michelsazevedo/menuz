@@ -26,6 +26,18 @@ class RestaurantsController < ApplicationController
     end
   end
 
+  post '/import' do
+    Importer.call(file: params[:file]) do |service|
+      service.success do |data|
+        render json: as_json(data), status: 202
+      end
+
+      service.failure do |errors|
+        render json: as_json(nil, errors: errors), status: 422
+      end
+    end
+  end
+
   post '/' do
     CreateRestaurant.call(restaurant_params) do |service|
       service.success do |restaurant|

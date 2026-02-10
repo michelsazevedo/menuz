@@ -11,7 +11,10 @@ SimpleCov.refuse_coverage_drop
 require 'factory_bot'
 require 'ffaker'
 require 'rack/test'
+require 'sidekiq/testing'
 require './config/boot'
+
+Sidekiq::Testing.fake!
 
 Dir.glob(
   ['./spec/support/**/*.rb', './spec/factories/*.rb']
@@ -32,11 +35,14 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   config.after(:each) do
+    Sidekiq::Worker.clear_all
+
     SequelDb.sequel_instance_exec do |db|
       db[:menu_items_menus].truncate
       db[:menus].truncate
       db[:menu_items].truncate
       db[:restaurants].truncate
+      db[:imports].truncate
     end
   end
 end

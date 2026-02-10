@@ -30,6 +30,16 @@ services:
       - RACK_ENV=development
       - REDIS_URL=redis://redis:6379
    
+  sidekiq:
+    <<: *base
+    command: "bundle exec sidekiq -r ./config/boot.rb"
+    container_name: menuz-sidekiq
+    depends_on:
+      - redis
+    environment:
+      - RACK_ENV=development
+      - REDIS_URL=redis://redis:6379
+
   redis:
     image: redis:alpine
     restart: unless-stopped

@@ -11,7 +11,7 @@ class Restaurant < Sequel::Model
 
   def validate
     super
-    validates_presence %i[name location]
+    validates_presence :name
     validates_unique :name
     validates_length_range 4..155, :name
   end

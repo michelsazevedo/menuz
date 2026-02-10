@@ -14,6 +14,7 @@ gem 'sequel'
 gem 'sqlite3'
 
 gem 'connection_pool'
+gem 'sidekiq'
 
 gem 'zeitwerk'
 

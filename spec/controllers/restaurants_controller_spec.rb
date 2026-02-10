@@ -56,6 +56,42 @@ RSpec.describe RestaurantsController, type: :controller do
     end
   end
 
+  describe 'POST /import' do
+    context 'with valid file' do
+      let(:service) { double('Importer') }
+      let(:import_data) { { id: 1, status: 'pending', file_location: '/tmp/test.json' } }
+
+      before do
+        allow(service).to receive(:success).and_yield(import_data)
+        allow(service).to receive(:failure)
+
+        allow(Importer).to receive(:call).and_yield(service)
+        post '/import', file: Rack::Test::UploadedFile.new(StringIO.new('{}'), 'application/json', false, original_filename: 'test.json')
+      end
+
+      it 'returns a 202 status code' do
+        expect(last_response.status).to eq(202)
+      end
+    end
+
+    context 'with invalid file' do
+      let(:service) { double('Importer') }
+      let(:errors) { { file: ['invalid file extension, only .json is allowed'] } }
+
+      before do
+        allow(service).to receive(:success)
+        allow(service).to receive(:failure).and_yield(errors)
+
+        allow(Importer).to receive(:call).and_yield(service)
+        post '/import', file: Rack::Test::UploadedFile.new(StringIO.new('data'), 'text/csv', false, original_filename: 'test.csv')
+      end
+
+      it 'returns a 422 status code' do
+        expect(last_response.status).to eq(422)
+      end
+    end
+  end
+
   describe 'POST /' do
     context 'with valid restaurant' do
       let(:record) { create(:restaurant) }

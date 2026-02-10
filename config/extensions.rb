@@ -21,3 +21,13 @@ end
 Sinatra.logger = Logz.new(ENV.fetch('APP_NAME', 'Menuz'), ENV.fetch('LOG_LEVEL', :info))
 Sinatra.cache = Cache.configure(logger: Sinatra.logger) unless Sinatra.test_env?
 
+require 'sidekiq'
+
+Sidekiq.configure_server do |config|
+  config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379') }
+end
+
+Sidekiq.configure_client do |config|
+  config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379') }
+end
+

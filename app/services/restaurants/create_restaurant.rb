@@ -7,7 +7,10 @@ class CreateRestaurant
   attributes :name, :location
 
   def call
-    restaurant = Restaurant.new(name:, location:)
+    restaurant = Restaurant.first(name:)
+    return Success(restaurant.values) if restaurant
+
+    restaurant = Restaurant.new({ name:, location: }.compact)
 
     if restaurant.valid?
       restaurant.save!
