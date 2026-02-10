@@ -14,8 +14,7 @@ class ApplicationController < Sinatra::Base
 
   helpers do
     def req_params
-      body = Oj.load(request.body.read)
-      symbolize_keys!(body)
+      Oj.load(request.body.read, symbol_keys: true)
     rescue Oj::ParseError
       render json: Oj.dump({ data: nil, errors: 'Invalid JSON format' }), status: 400
     end
@@ -23,19 +22,6 @@ class ApplicationController < Sinatra::Base
     def render(json:, status: 200)
       content_type :json
       halt status, Oj.dump(json)
-    end
-
-    def symbolize_keys!(object)
-      if object.is_a?(Array)
-        object.each_with_index do |val, index|
-          object[index] = symbolize_keys!(val)
-        end
-      elsif object.is_a?(Hash)
-        object.keys.each do |key|
-          object[key.to_sym] = symbolize_keys!(object.delete(key))
-        end
-      end
-      object
     end
   end
 end
