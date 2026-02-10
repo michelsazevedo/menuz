@@ -12,7 +12,7 @@ namespace :db do
 
     version = args[:version].to_i if args[:version]
 
-    SequelDb.sequel_instance_exec do |db|
+    SequelDb.instance.with_db do |db|
       Sequel::Migrator.run(db, './db/migrations', target: version)
     end
   end

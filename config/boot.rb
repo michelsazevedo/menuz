@@ -9,7 +9,7 @@ require_relative 'sequeldb'
 require_relative 'extensions'
 
 # Establish connection
-SequelDb.establish_connection!
+SequelDb.configure
 
 # Configure Oj
 Oj.default_options = { mode: :compat }
